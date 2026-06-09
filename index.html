@@ -1,3 +1,4 @@
+HTML
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -116,7 +117,152 @@
             color: #312e81;
         }
 
-        /* 결과 화면 탭 시스템 */
+        /* 결과 화면 디자인 */
         .result-header { text-align: center; margin-bottom: 30px; }
-        .mbti-tag { font-size: 3rem; font-weight: 900; color: var(--primary); margin: 10px 0; letter-spacing: 2px; }
-        .character-emoji { font-size
+        .mbti-tag { font-size: 3.5rem; font-weight: 900; color: var(--primary); margin: 10px 0; letter-spacing: 2px; }
+        .character-emoji { font-size: 4.5rem; display: block; margin-bottom: 10px; }
+        .result-title { font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin-bottom: 30px; }
+        
+        /* 인트로 디자인 추가 */
+        .intro-container { text-align: center; }
+        .intro-title { font-size: 2rem; font-weight: 800; margin-bottom: 10px; color: var(--text-main); }
+        .intro-desc { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 40px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div id="start-page" class="page active">
+            <div class="intro-container">
+                <span class="character-emoji">🧠</span>
+                <div class="intro-title">정밀 성격유형 진단</div>
+                <div class="intro-desc">질문에 솔직하게 답하며<br>나의 진짜 MBTI 성향을 확인해 보세요.</div>
+                <button class="btn-main" onclick="startTest()">테스트 시작하기</button>
+            </div>
+        </div>
+
+        <div id="question-page" class="page">
+            <div class="progress-wrapper" id="progress-area">
+                <div class="progress-text">
+                    <span>테스트 진행도</span>
+                    <span id="progress-percent">1 / 4</span>
+                </div>
+                <div class="progress-bg">
+                    <div class="progress-fill" id="progress-fill-bar"></div>
+                </div>
+            </div>
+
+            <div class="question-title" id="question-text">질문을 불러오는 중입니다...</div>
+            <div id="options-container"></div>
+        </div>
+
+        <div id="result-page" class="page">
+            <div class="result-header">
+                <span class="character-emoji" id="result-emoji">🔮</span>
+                <p style="color: var(--text-muted); font-weight: 600; margin: 0;">당신의 성격 유형은</p>
+                <div class="mbti-tag" id="result-mbti">ESTJ</div>
+                <div class="result-title" id="result-title">지표 분석 중...</div>
+                <button class="btn-main" onclick="location.reload()">다시 테스트하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 핵심 MBTI 4문항 데이터 세팅
+        const questions = [
+            { q: "주말에 시간이 생겼을 때 나는 주로 어떤 행동을 하나요?", a: "친구들을 만나거나 밖으로 나가 에너지를 얻는다 (E)", b: "집에서 혼자 넷플릭스를 보며 에너지를 충전한다 (I)", type: "EI" },
+            { q: "사과를 보았을 때 머릿속에 먼저 드는 생각은?", a: "빨갛다, 맛있다, 아삭하다 (S)", b: "백설공주, 뉴턴의 중력, 아이폰 로고 (N)", type: "SN" },
+            { q: "친구가 '나 속상해서 쇼핑했어'라고 했을 때 나의 반응은?", a: "쇼핑 뭐 했어? 세일 많이 해? (T)", b: "헐.. 무슨 일 있었어? 왜 속상했어ㅠㅠ (F)", type: "FT" },
+            { q: "과제를 하거나 업무를 처리할 때 나의 계획 스타일은?", a: "미리 마감일 전까지 분량을 나눠 체계적으로 끝낸다 (J)", b: "마감 직전까지 미루다가 막판에 집중력을 발휘한다 (P)", type: "JP" }
+        ];
+
+        let currentIdx = 0;
+        let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+
+        function startTest() {
+            document.getElementById('start-page').classList.remove('active');
+            document.getElementById('question-page').classList.add('active');
+            document.getElementById('progress-area').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentIdx >= questions.length) {
+                showResult();
+                return;
+            }
+
+            // 프로그레스 바 상태 업데이트
+            document.getElementById('progress-percent').innerText = `${currentIdx + 1} / ${questions.length}`;
+            document.getElementById('progress-fill-bar').style.width = `${((currentIdx + 1) / questions.length) * 100}%`;
+
+            const currentQ = questions[currentIdx];
+            document.getElementById('question-text').innerText = currentQ.q;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = ''; // 이전 선택지 초기화
+
+            // 첫 번째 선택지 버튼 생성
+            const btnA = document.createElement('button');
+            btnA.className = 'opt-btn';
+            btnA.innerText = currentQ.a;
+            btnA.onclick = () => selectOption(currentQ.type[0]);
+
+            // 두 번째 선택지 버튼 생성
+            const btnB = document.createElement('button');
+            btnB.className = 'opt-btn';
+            btnB.innerText = currentQ.b;
+            btnB.onclick = () => selectOption(currentQ.type[1]);
+
+            container.appendChild(btnA);
+            container.appendChild(btnB);
+        }
+
+        function selectOption(key) {
+            scores[key]++;
+            currentIdx++;
+            showQuestion();
+        }
+
+        function showResult() {
+            document.getElementById('question-page').classList.remove('active');
+            document.getElementById('progress-area').style.display = 'none';
+            document.getElementById('result-page').classList.add('active');
+
+            // 점수 판정 연산
+            let mbti = '';
+            mbti += (scores.E >= scores.I) ? 'E' : 'I';
+            mbti += (scores.S >= scores.N) ? 'S' : 'N';
+            mbti += (scores.T >= scores.F) ? 'T' : 'F';
+            mbti += (scores.J >= scores.P) ? 'J' : 'P';
+
+            // 결과 데이터 맵
+            const resultTemplates = {
+                'ISTJ': { title: '청렴결백한 논리주의자', emoji: '📐' },
+                'ISFJ': { title: '용감한 수호자', emoji: '🛡️' },
+                'INFJ': { title: '선의의 옹호자', emoji: '🔮' },
+                'INTJ': { title: '용의주도한 전략가', emoji: '♟️' },
+                'ISTP': { title: '만능 재주꾼', emoji: '🔧' },
+                'ISFP': { title: '호기심 많은 예술가', emoji: '🎨' },
+                'INFP': { title: '열정적인 중재자', emoji: '🌱' },
+                'INTP': { title: '논리적인 사색가', emoji: '🧪' },
+                'ESTP': { title: '모험을 즐기는 사업가', emoji: '🏎️' },
+                'ESFP': { title: '자유로운 영혼의 연예인', emoji: '✨' },
+                'ENFP': { title: '재기발랄한 활동가', emoji: '🎈' },
+                'ENTP': { title: '뜨거운 논쟁을 즐기는 변론가', emoji: '📢' },
+                'ESTJ': { title: '엄격한 관리자', emoji: '👔' },
+                'ESFJ': { title: '사교적인 외교관', emoji: '🤝' },
+                'ENFJ': { title: '정의로운 사회운동가', emoji: '☀️' },
+                'ENTJ': { title: '대담한 통솔자', emoji: '👑' }
+            };
+
+            const finalResult = resultTemplates[mbti] || { title: '알 수 없는 신비로운 존재', emoji: '👽' };
+
+            // 화면에 바인딩
+            document.getElementById('result-mbti').innerText = mbti;
+            document.getElementById('result-title').innerText = finalResult.title;
+            document.getElementById('result-emoji').innerText = finalResult.emoji;
+        }
+    </script>
+</body>
+</html>
