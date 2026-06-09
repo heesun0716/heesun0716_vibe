@@ -1,4 +1,3 @@
-HTML
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,262 +5,1913 @@ HTML
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>정밀 성격유형 진단 테스트 (Premium MBTI)</title>
     <style>
+        /* Pretendard 프리미엄 폰트 적용 */
+        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
+
         :root {
-            --primary: #4f46e5;
+            /* 기본 테마: Indigo/Purple (Neutral) */
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
             --primary-light: #e0e7ff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --bg-app: #f8fafc;
-            --success: #10b981;
-            --danger: #ef4444;
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --glow-color: rgba(99, 102, 241, 0.25);
+
+            /* 라이트 모드 컬러 변수 */
+            --bg-app: #f4f6fc;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --border-color: rgba(99, 102, 241, 0.12);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --option-bg: #ffffff;
+            --option-border: #e2e8f0;
+            --option-hover-bg: #f8fafc;
+            --progress-bg: #e2e8f0;
+            --progress-bg-secondary: #cbd5e1;
+            --badge-bg: #f1f5f9;
+            --badge-text: #475569;
+            --card-shadow: 0 30px 60px -15px rgba(99, 102, 241, 0.12);
+            --modal-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        /* 다크 모드 변수 재정의 */
+        body.dark-theme {
+            --bg-app: #090d16;
+            --card-bg: rgba(15, 23, 42, 0.75);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --option-bg: rgba(30, 41, 59, 0.5);
+            --option-border: rgba(255, 255, 255, 0.05);
+            --option-hover-bg: rgba(51, 65, 85, 0.5);
+            --progress-bg: #1e293b;
+            --progress-bg-secondary: #334155;
+            --badge-bg: #1e293b;
+            --badge-text: #94a3b8;
+            --card-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.6);
+            --modal-bg: rgba(15, 23, 42, 0.95);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: 'Pretendard', -apple-system, sans-serif;
             background-color: var(--bg-app);
             color: var(--text-main);
-            margin: 0;
-            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 24px;
+            transition: background-color 0.5s ease, color 0.5s ease;
+            position: relative;
+            overflow-x: hidden;
         }
 
+        /* 움직이는 프리미엄 그라디언트 오브 배경 */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.18;
+            z-index: -1;
+            pointer-events: none;
+            transition: all 1s ease;
+        }
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            top: -150px;
+            left: -150px;
+            animation: float-slow 16s infinite alternate;
+        }
+        .orb-2 {
+            width: 600px;
+            height: 600px;
+            background: #a855f7;
+            bottom: -200px;
+            right: -150px;
+            animation: float-slow 22s infinite alternate-reverse;
+        }
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: #3b82f6;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: float-pulse 12s infinite alternate;
+        }
+        @keyframes float-slow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(60px, 40px) scale(1.15); }
+        }
+        @keyframes float-pulse {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.12; }
+            100% { transform: translate(-45%, -47%) scale(1.1) opacity: 0.22; }
+        }
+
+        /* 글래스모피즘 메인 카드 */
         .app-container {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border-color);
+            border-radius: 36px;
+            padding: 48px;
+            box-shadow: var(--card-shadow);
             width: 100%;
-            max-width: 650px;
-            box-sizing: border-box;
+            max-width: 680px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
 
-        /* 공통 버튼 */
-        .btn-main {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 16px 32px;
-            font-size: 1.1rem;
-            border-radius: 14px;
-            cursor: pointer;
-            font-weight: 600;
-            width: 100%;
-            transition: all 0.2s ease;
-        }
-        .btn-main:hover {
-            background-color: #3730a3;
-            transform: translateY(-1px);
-        }
-
-        /* 프로그레스 바 */
-        .progress-wrapper {
-            display: none;
-            margin-bottom: 30px;
-        }
-        .progress-text {
+        /* 상단 유틸 바 (헤더) */
+        .header-bar {
             display: flex;
             justify-content: space-between;
-            font-size: 0.9rem;
+            align-items: center;
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 10;
+        }
+        .theme-toggle, .sound-toggle {
+            background: var(--badge-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            color: var(--text-main);
+        }
+        .theme-toggle:hover, .sound-toggle:hover {
+            transform: scale(1.08);
+            background: var(--option-hover-bg);
+            border-color: var(--primary);
+        }
+        .header-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* 메인 버튼 스타일 */
+        .btn-main {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            padding: 18px 36px;
+            font-size: 1.15rem;
+            border-radius: 18px;
+            cursor: pointer;
+            font-weight: 700;
+            width: 100%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 25px -5px var(--glow-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px var(--glow-color);
+            filter: brightness(1.08);
+        }
+        .btn-main:active {
+            transform: translateY(1px);
+        }
+
+        /* 진행도 컴포넌트 */
+        .progress-wrapper {
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .progress-text {
+            font-size: 0.95rem;
             color: var(--text-muted);
-            margin-bottom: 8px;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .progress-percent-bubble {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
         }
         .progress-bg {
             width: 100%;
-            background-color: #e2e8f0;
-            height: 8px;
+            background-color: var(--progress-bg);
+            height: 10px;
             border-radius: 99px;
             overflow: hidden;
+            position: relative;
         }
         .progress-fill {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), #818cf8);
-            transition: width 0.3s ease;
+            background: var(--accent-gradient);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 99px;
+            box-shadow: 0 0 12px var(--glow-color);
         }
 
-        /* 페이지 컨트롤 */
-        .page { display: none; }
-        .active { display: block; }
-
-        /* 질문지 디자인 */
-        .question-title {
-            font-size: 1.4rem;
+        /* 뒤로가기 버튼 */
+        .btn-back {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
             font-weight: 700;
-            line-height: 1.5;
-            margin-bottom: 35px;
-            word-break: keep-all;
+            padding: 6px 12px;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            visibility: hidden; /* JavaScript에서 동적으로 표시 */
         }
-        .opt-btn {
-            background: #ffffff;
-            border: 2px solid #e2e8f0;
+        .btn-back:hover {
             color: var(--text-main);
-            padding: 20px;
-            font-size: 1.05rem;
-            border-radius: 16px;
+            background: var(--badge-bg);
+        }
+
+        /* 페이지 전환 효과 */
+        .page {
+            display: none;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 질문 콘텐츠 트랜지션 (Fading) */
+        .fade-transition {
+            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .fade-out {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+        .fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 질문 텍스트 스타일 */
+        .question-title {
+            font-size: 1.55rem;
+            font-weight: 800;
+            line-height: 1.5;
+            margin-bottom: 40px;
+            word-break: keep-all;
+            text-align: center;
+            color: var(--text-main);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 대답 카드 옵션 버튼 */
+        .opt-btn {
+            background: var(--option-bg);
+            border: 1.5px solid var(--option-border);
+            color: var(--text-main);
+            padding: 24px 28px;
+            font-size: 1.08rem;
+            border-radius: 22px;
             cursor: pointer;
             width: 100%;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             text-align: left;
             box-sizing: border-box;
-            transition: all 0.2s ease;
-            font-weight: 500;
-            line-height: 1.4;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            line-height: 1.45;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        .opt-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: opacity 0.25s ease;
         }
         .opt-btn:hover {
             border-color: var(--primary);
-            background-color: var(--primary-light);
-            color: #312e81;
+            background-color: var(--option-hover-bg);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px -8px var(--glow-color);
+        }
+        .opt-btn:hover::before {
+            opacity: 1;
+        }
+        .opt-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            font-weight: 800;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+        }
+        .opt-btn:hover .opt-badge {
+            background: var(--accent-gradient);
+            color: white;
         }
 
-        /* 결과 화면 디자인 */
-        .result-header { text-align: center; margin-bottom: 30px; }
-        .mbti-tag { font-size: 3.5rem; font-weight: 900; color: var(--primary); margin: 10px 0; letter-spacing: 2px; }
-        .character-emoji { font-size: 4.5rem; display: block; margin-bottom: 10px; }
-        .result-title { font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin-bottom: 30px; }
-        
-        /* 인트로 디자인 추가 */
-        .intro-container { text-align: center; }
-        .intro-title { font-size: 2rem; font-weight: 800; margin-bottom: 10px; color: var(--text-main); }
-        .intro-desc { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 40px; line-height: 1.6; }
+        /* 시작 페이지 전용 스타일 */
+        .start-badge {
+            display: inline-flex;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+        .start-illustration {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--option-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 30%;
+            box-shadow: 0 20px 40px -10px var(--glow-color);
+            position: relative;
+            animation: pulse-ring 3s infinite ease-in-out;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(1); box-shadow: 0 20px 40px -10px var(--glow-color); }
+            50% { transform: scale(1.05); box-shadow: 0 25px 50px -5px var(--glow-color); }
+            100% { transform: scale(1); box-shadow: 0 20px 40px -10px var(--glow-color); }
+        }
+        .start-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .start-info-card {
+            background: var(--option-bg);
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: 18px;
+            font-size: 0.9rem;
+        }
+        .start-info-card span {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .start-info-card strong {
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        /* 로딩 분석 페이지 스타일 */
+        #loading-page {
+            text-align: center;
+            padding: 40px 0;
+        }
+        .loader-visualization {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+        .loader-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px solid transparent;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+        .loader-ring:nth-child(2) {
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+            border-top-color: #a855f7;
+            animation: spin-reverse 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+        .loader-ring:nth-child(3) {
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+            border-top-color: #3b82f6;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes spin-reverse {
+            to { transform: rotate(-360deg); }
+        }
+        .loading-phrase {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            min-height: 30px;
+        }
+        .loading-subtext {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* 결과 화면 전용 스타일 */
+        .result-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .character-emoji {
+            font-size: 4.8rem;
+            display: inline-block;
+            margin-bottom: 18px;
+            animation: wave 2s infinite ease-in-out;
+        }
+        @keyframes wave {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(8deg); }
+        }
+        .mbti-tag {
+            font-size: 3.6rem;
+            font-weight: 900;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            margin: 6px 0 12px;
+            letter-spacing: 3px;
+            display: inline-block;
+        }
+        .result-desc-card {
+            background: var(--option-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 36px;
+            box-shadow: 0 10px 30px -15px rgba(0,0,0,0.05);
+        }
+        .result-desc-text {
+            font-size: 1.05rem;
+            line-height: 1.65;
+            color: var(--text-muted);
+            word-break: keep-all;
+        }
+        .trait-tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 18px;
+        }
+        .trait-tag {
+            background: var(--badge-bg);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 6px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* 성격 균형도 분석 차트 (4 Dimensions) */
+        .charts-container {
+            margin-bottom: 40px;
+        }
+        .charts-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dimension-row {
+            margin-bottom: 22px;
+        }
+        .dimension-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+        .dim-label {
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+        .dim-label.active {
+            color: var(--primary);
+            font-weight: 800;
+        }
+        .dim-bar-wrapper {
+            display: flex;
+            height: 14px;
+            background: var(--progress-bg);
+            border-radius: 99px;
+            overflow: hidden;
+            position: relative;
+        }
+        .dim-bar-left {
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 99px 0 0 99px;
+            transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .dim-bar-right {
+            height: 100%;
+            background: var(--progress-bg-secondary);
+            border-radius: 0 99px 99px 0;
+            transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        /* 우측 우세일 때 색상 반전 처리 */
+        .dim-row-right .dim-bar-left {
+            background: var(--progress-bg-secondary);
+        }
+        .dim-row-right .dim-bar-right {
+            background: var(--accent-gradient);
+        }
+
+        /* 궁합 영역 */
+        .compatibility-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        .comp-card {
+            background: var(--option-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 22px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .comp-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px var(--glow-color);
+            border-color: var(--primary);
+        }
+        .comp-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .comp-mbti {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 4px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .comp-name {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* 액션 버튼 영역 */
+        .result-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .btn-secondary-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .btn-sec {
+            background: var(--option-bg);
+            color: var(--text-main);
+            border: 1.5px solid var(--border-color);
+            padding: 16px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-sec:hover {
+            border-color: var(--primary);
+            background: var(--option-hover-bg);
+            transform: translateY(-1px);
+        }
+
+        /* 모달 윈도우 공통 스타일 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(9, 13, 22, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 20px;
+        }
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background: var(--modal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 36px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--badge-bg);
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .modal-close-btn:hover {
+            background: var(--option-hover-bg);
+            transform: scale(1.05);
+        }
+
+        /* 카드 프리뷰 모달 스타일 */
+        .card-preview-area {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+            margin-top: 10px;
+        }
+        .premium-pass-preview {
+            width: 300px;
+            height: 400px;
+            background: var(--accent-gradient);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .premium-pass-preview .bg-circles {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 250px;
+            height: 250px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .premium-pass-preview .bg-circles::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 170px;
+            height: 170px;
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 50%;
+        }
+
+        /* 토스트 알림창 */
+        .custom-toast {
+            position: fixed;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 14px 28px;
+            border-radius: 50px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        body.dark-theme .custom-toast {
+            background: #ffffff;
+            color: #0f172a;
+        }
+        .custom-toast.show {
+            bottom: 40px;
+            opacity: 1;
+        }
+
+        /* 모바일 환경 대응 최적화 */
+        @media (max-width: 640px) {
+            .app-container {
+                padding: 30px 20px;
+                border-radius: 28px;
+            }
+            .question-title {
+                font-size: 1.3rem;
+                margin-bottom: 30px;
+                min-height: auto;
+            }
+            .opt-btn {
+                padding: 18px 20px;
+                font-size: 0.98rem;
+                border-radius: 18px;
+                margin-bottom: 12px;
+            }
+            .start-info-grid {
+                gap: 10px;
+                margin-bottom: 30px;
+            }
+            .start-info-card {
+                padding: 12px 6px;
+                font-size: 0.8rem;
+            }
+            .mbti-tag {
+                font-size: 2.8rem;
+            }
+            .comp-card {
+                padding: 14px;
+            }
+            .comp-mbti {
+                font-size: 1.1rem;
+            }
+            .btn-secondary-group {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
     </style>
 </head>
 <body>
 
+    <!-- 부드럽게 흐르는 프리미엄 그라데이션 원형 배경들 -->
+    <div class="glow-orb orb-1" id="orb-1"></div>
+    <div class="glow-orb orb-2" id="orb-2"></div>
+    <div class="glow-orb orb-3" id="orb-3"></div>
+
     <div class="app-container">
-        <div id="start-page" class="page active">
-            <div class="intro-container">
-                <span class="character-emoji">🧠</span>
-                <div class="intro-title">정밀 성격유형 진단</div>
-                <div class="intro-desc">질문에 솔직하게 답하며<br>나의 진짜 MBTI 성향을 확인해 보세요.</div>
-                <button class="btn-main" onclick="startTest()">테스트 시작하기</button>
+        <!-- 상단 헤더 유틸바 -->
+        <div class="header-bar">
+            <!-- 뒤로가기 버튼 -->
+            <button id="btn-back" class="btn-back" onclick="goBack()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                이전으로
+            </button>
+
+            <!-- 테마 및 소리 조절 컨트롤러 -->
+            <div class="header-controls">
+                <button class="sound-toggle" id="sound-btn" onclick="toggleSound()" title="소리 켜기/끄기">
+                    <!-- Mute Icon Default -->
+                    <svg id="sound-off-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+                    <!-- Active Icon (Hidden) -->
+                    <svg id="sound-on-icon" style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                </button>
+                <button class="theme-toggle" onclick="toggleTheme()" title="화면 테마 변경">
+                    <!-- Sun icon -->
+                    <svg class="sun-icon" style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <!-- Moon icon -->
+                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
             </div>
         </div>
 
+        <!-- 1. 시작 페이지 -->
+        <div id="start-page" class="page active">
+            <div class="result-header">
+                <div class="start-illustration">
+                    <span style="font-size: 3.5rem;">🧠</span>
+                </div>
+                <div class="start-badge">PREMIUM ANALYSIS</div>
+                <h1 style="font-size: 2.1rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 12px; word-break: keep-all;">정밀 성격유형 진단 테스트</h1>
+                <p style="color: var(--text-muted); font-size: 1.05rem; font-weight: 500; line-height: 1.6; margin-bottom: 36px; word-break: keep-all;">
+                    몇 가지 일상 질문을 통해 내 진짜 행동 성향과 마인드셋을 정밀하게 프로파일링하고, 고급 개인 맞춤 분석 카드를 받아보세요.
+                </p>
+            </div>
+
+            <!-- 요약 스펙 그리드 -->
+            <div class="start-info-grid">
+                <div class="start-info-card">
+                    <span>문항 수</span>
+                    <strong>12문항</strong>
+                </div>
+                <div class="start-info-card">
+                    <span>소요 시간</span>
+                    <strong>약 3분</strong>
+                </div>
+                <div class="start-info-card">
+                    <span>분석 항목</span>
+                    <strong>4차원 분석</strong>
+                </div>
+            </div>
+
+            <button class="btn-main" onclick="startTest()">
+                진단 시작하기
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+        </div>
+
+        <!-- 2. 질문 페이지 -->
         <div id="question-page" class="page">
-            <div class="progress-wrapper" id="progress-area">
-                <div class="progress-text">
-                    <span>테스트 진행도</span>
-                    <span id="progress-percent">1 / 4</span>
+            <div class="progress-wrapper">
+                <div class="progress-header">
+                    <span class="progress-text">성향 정밀 분석 진행도</span>
+                    <span class="progress-percent-bubble" id="progress-percent">1 / 12</span>
                 </div>
                 <div class="progress-bg">
                     <div class="progress-fill" id="progress-fill-bar"></div>
                 </div>
             </div>
 
-            <div class="question-title" id="question-text">질문을 불러오는 중입니다...</div>
-            <div id="options-container"></div>
+            <!-- 페이드 인아웃 트랜지션을 위한 컨테이너 영역 -->
+            <div id="question-content" class="fade-transition">
+                <div class="question-title" id="question-title-text">
+                    질문 로딩 중...
+                </div>
+                <div id="options-container">
+                    <!-- 선택 버튼이 동적으로 생성되는 위치 -->
+                </div>
+            </div>
         </div>
 
+        <!-- 3. 대기/분석 중 페이지 -->
+        <div id="loading-page" class="page">
+            <div class="loader-visualization">
+                <div class="loader-ring"></div>
+                <div class="loader-ring"></div>
+                <div class="loader-ring"></div>
+            </div>
+            <div class="loading-phrase" id="loading-phrase">데이터 연산 중...</div>
+            <div class="loading-subtext">나의 특성과 성향 밸런스를 계산하고 프리미엄 리포트를 생성 중입니다.</div>
+        </div>
+
+        <!-- 4. 결과 페이지 -->
         <div id="result-page" class="page">
             <div class="result-header">
-                <span class="character-emoji" id="result-emoji">🔮</span>
-                <p style="color: var(--text-muted); font-weight: 600; margin: 0;">당신의 성격 유형은</p>
-                <div class="mbti-tag" id="result-mbti">ESTJ</div>
-                <div class="result-title" id="result-title">지표 분석 중...</div>
-                <button class="btn-main" onclick="location.reload()">다시 테스트하기</button>
+                <span class="character-emoji" id="result-emoji">✨</span>
+                <p style="color: var(--text-muted); font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 2px;">당신의 성격 유형은?</p>
+                <div>
+                    <h2 class="mbti-tag" id="result-mbti">ESTJ</h2>
+                </div>
+                <h3 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin-top: 0; letter-spacing: -0.5px;" id="result-title">일 잘하는 프로 계획러</h3>
+            </div>
+
+            <!-- MBTI 상세 설명 카드 -->
+            <div class="result-desc-card">
+                <p class="result-desc-text" id="result-desc">성격 상세 정보가 표시됩니다.</p>
+                <div class="trait-tags-container" id="result-tags-container">
+                    <!-- 태그 목록 -->
+                </div>
+            </div>
+
+            <!-- 성격 균형도 분석 (4 Dimensions 차트) -->
+            <div class="charts-container">
+                <h4 class="charts-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    성향 상세 밸런스 분석
+                </h4>
+                
+                <!-- EI 차트 -->
+                <div class="dimension-row" id="dim-row-ei">
+                    <div class="dimension-labels">
+                        <span class="dim-label" id="lbl-E">외향형 (E)</span>
+                        <span class="dim-label" id="lbl-I">내향형 (I)</span>
+                    </div>
+                    <div class="dim-bar-wrapper">
+                        <div class="dim-bar-left" id="bar-E"></div>
+                        <div class="dim-bar-right" id="bar-I"></div>
+                    </div>
+                </div>
+
+                <!-- SN 차트 -->
+                <div class="dimension-row" id="dim-row-sn">
+                    <div class="dimension-labels">
+                        <span class="dim-label" id="lbl-S">감각형 (S)</span>
+                        <span class="dim-label" id="lbl-N">직관형 (N)</span>
+                    </div>
+                    <div class="dim-bar-wrapper">
+                        <div class="dim-bar-left" id="bar-S"></div>
+                        <div class="dim-bar-right" id="bar-N"></div>
+                    </div>
+                </div>
+
+                <!-- FT 차트 -->
+                <div class="dimension-row" id="dim-row-ft">
+                    <div class="dimension-labels">
+                        <span class="dim-label" id="lbl-F">감정형 (F)</span>
+                        <span class="dim-label" id="lbl-T">사고형 (T)</span>
+                    </div>
+                    <div class="dim-bar-wrapper">
+                        <div class="dim-bar-left" id="bar-F"></div>
+                        <div class="dim-bar-right" id="bar-T"></div>
+                    </div>
+                </div>
+
+                <!-- JP 차트 -->
+                <div class="dimension-row" id="dim-row-jp">
+                    <div class="dimension-labels">
+                        <span class="dim-label" id="lbl-J">판단형 (J)</span>
+                        <span class="dim-label" id="lbl-P">인식형 (P)</span>
+                    </div>
+                    <div class="dim-bar-wrapper">
+                        <div class="dim-bar-left" id="bar-J"></div>
+                        <div class="dim-bar-right" id="bar-P"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 성격 유형 매칭 최고의 궁합 / 최악의 궁합 -->
+            <div class="compatibility-section">
+                <!-- 최고의 궁합 -->
+                <div class="comp-card" id="comp-best" onclick="viewCompDetails('best')">
+                    <div class="comp-title" style="color: #10b981;">최고의 파트너 💚</div>
+                    <div class="comp-mbti"><span id="comp-best-emoji">🤝</span> <strong id="comp-best-code">ISFP</strong></div>
+                    <div class="comp-name" id="comp-best-title">호기심 많은 예술가</div>
+                </div>
+                <!-- 아쉬운 궁합 -->
+                <div class="comp-card" id="comp-worst" onclick="viewCompDetails('worst')">
+                    <div class="comp-title" style="color: #ef4444;">아쉬운 파트너 💔</div>
+                    <div class="comp-mbti"><span id="comp-worst-emoji">🧪</span> <strong id="comp-worst-code">INTP</strong></div>
+                    <div class="comp-name" id="comp-worst-title">논리적인 사색가</div>
+                </div>
+            </div>
+
+            <!-- 재시도 및 다운로드 액션단 -->
+            <div class="result-actions">
+                <button class="btn-main" onclick="openShareModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    프리미엄 성격 인증서 발급
+                </button>
+                <div class="btn-secondary-group">
+                    <button class="btn-sec" onclick="copyLink()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                        결과 링크 복사
+                    </button>
+                    <button class="btn-sec" onclick="resetTest()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                        다시 진단하기
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- 모달: 최고의/아쉬운 궁합 세부 정보 설명 팝업 -->
+    <div id="mbti-details-modal" class="modal" onclick="closeModalOnBackdrop(event)">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeMbtiDetailsModal()">&times;</button>
+            <div style="text-align: center; margin-bottom: 24px;">
+                <span id="modal-emoji" style="font-size: 3.5rem; display: block; margin-bottom: 12px; animation: pulse-ring 3s infinite ease-in-out;">🛡️</span>
+                <div id="modal-badge" class="start-badge" style="margin-bottom: 8px;">SENTINEL</div>
+                <h3 id="modal-mbti" style="font-size: 2.2rem; font-weight: 900; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; letter-spacing: 1px;">ISFJ</h3>
+                <h4 id="modal-title" style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-top: 4px;">용감한 수호자</h4>
+            </div>
+            <div style="background: var(--option-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: 20px; margin-bottom: 24px;">
+                <p id="modal-desc" style="font-size: 1rem; line-height: 1.6; color: var(--text-muted); word-break: keep-all;">성격의 상세 분석 데이터가 표시됩니다.</p>
+                <div class="trait-tags-container" id="modal-tags" style="margin-top: 14px;">
+                    <!-- 모달 태그 목록 -->
+                </div>
+            </div>
+            <button class="btn-main" onclick="closeMbtiDetailsModal()">확인</button>
+        </div>
+    </div>
+
+    <!-- 모달: 프리미엄 인증서 미리보기 & 다운로드 모달 -->
+    <div id="share-modal" class="modal" onclick="closeModalOnBackdrop(event)">
+        <div class="modal-content" style="max-width: 440px; padding: 24px;">
+            <button class="modal-close-btn" onclick="closeShareModal()">&times;</button>
+            <h3 style="font-size: 1.25rem; font-weight: 800; text-align: center; margin-bottom: 16px;">프리미엄 인증서 발급</h3>
+            
+            <!-- 실시간 변경되는 여권 카드 형태 시각 프리뷰 -->
+            <div class="card-preview-area">
+                <div class="premium-pass-preview" id="preview-passport">
+                    <div class="bg-circles"></div>
+                    <div style="text-align: center;">
+                        <span style="font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; opacity: 0.8; text-transform: uppercase;">Premium Personality Passport</span>
+                        <div style="width: 25px; height: 1.5px; background: rgba(255,255,255,0.4); margin: 6px auto 0;"></div>
+                    </div>
+                    <div style="text-align: center; margin: 15px 0;">
+                        <div id="preview-emoji" style="font-size: 3.4rem; display: inline-block; filter: drop-shadow(0 8px 12px rgba(0,0,0,0.15));">🛡️</div>
+                        <h4 id="preview-mbti" style="font-size: 2.8rem; font-weight: 900; margin: 2px 0; letter-spacing: 1.5px;">ISFJ</h4>
+                        <span id="preview-title" style="font-size: 0.95rem; font-weight: 700; opacity: 0.9;">용감한 수호자</span>
+                    </div>
+                    <div style="font-size: 0.78rem; text-align: center; line-height: 1.5; opacity: 0.9; background: rgba(255, 255, 255, 0.12); padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); word-break: keep-all;" id="preview-desc">
+                        내용이 요약되어 표시됩니다.
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.65rem; border-top: 1px dashed rgba(255,255,255,0.25); padding-top: 12px; margin-top: 10px;">
+                        <span style="opacity: 0.75; font-weight: 600;">OFFICIAL CERTIFICATE</span>
+                        <span style="opacity: 0.75; font-weight: 600;">© PREMIUM MBTI</span>
+                    </div>
+                </div>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 20px; line-height: 1.5; word-break: keep-all;">
+                모바일 환경에서는 카드를 길게 누르거나 직접 캡처하여 소장할 수 있으며, 아래 버튼을 통해 이미지 파일로 안전하게 다운로드 받을 수 있습니다.
+            </p>
+
+            <button class="btn-main" onclick="downloadCardImage()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                이미지 파일로 저장하기
+            </button>
+        </div>
+    </div>
+
     <script>
-        // 핵심 MBTI 4문항 데이터 세팅
+        // MBTI 질문 데이터셋 (각 선택항목의 가중치를 독립적으로 매핑하여 인덱스 혼동 버그 완전 해결!)
         const questions = [
-            { q: "주말에 시간이 생겼을 때 나는 주로 어떤 행동을 하나요?", a: "친구들을 만나거나 밖으로 나가 에너지를 얻는다 (E)", b: "집에서 혼자 넷플릭스를 보며 에너지를 충전한다 (I)", type: "EI" },
-            { q: "사과를 보았을 때 머릿속에 먼저 드는 생각은?", a: "빨갛다, 맛있다, 아삭하다 (S)", b: "백설공주, 뉴턴의 중력, 아이폰 로고 (N)", type: "SN" },
-            { q: "친구가 '나 속상해서 쇼핑했어'라고 했을 때 나의 반응은?", a: "쇼핑 뭐 했어? 세일 많이 해? (T)", b: "헐.. 무슨 일 있었어? 왜 속상했어ㅠㅠ (F)", type: "FT" },
-            { q: "과제를 하거나 업무를 처리할 때 나의 계획 스타일은?", a: "미리 마감일 전까지 분량을 나눠 체계적으로 끝낸다 (J)", b: "마감 직전까지 미루다가 막판에 집중력을 발휘한다 (P)", type: "JP" }
+            { q: "주말에 갑작스러운 약속이 취소되었을 때, 나의 반응은?", a: "아싸! 혼자 집에서 쉴 수 있겠다!", aScore: "I", b: "갑자기 심심하네.. 다른 사람이라도 불러야겠다", bScore: "E" },
+            { q: "친구에게 고민을 털어놓을 때 내가 바라는 것은?", a: "내 감정에 공감해주고 위로해주는 것", aScore: "F", b: "문제를 해결할 수 있는 현실적인 조언", bScore: "T" },
+            { q: "여행 계획을 세울 때 나의 스타일은?", a: "시간 단위로 맛집부터 루트까지 완벽하게 정함", aScore: "J", b: "비행기 표랑 숙소만 정하고 상황에 맞게 움직임", bScore: "P" },
+            { q: "새로운 사람들과 만나는 자리에 갔을 때 나는?", a: "먼저 말을 걸며 분위기를 주도한다", aScore: "E", b: "말을 걸어올 때까지 주로 듣고 있는다", bScore: "I" },
+            { q: "사과를 보면 드는 생각은?", a: "빨갛다, 맛있겠다, 아삭하겠다", aScore: "S", b: "백설공주, 뉴턴, 애플 스마트폰, 스티브 잡스", bScore: "N" },
+            { q: "친구가 '나 슬퍼서 빵 샀어'라고 한다면 나의 대답은?", a: "무슨 일 있어? 왜 슬퍼ㅠㅠ", aScore: "F", b: "무슨 빵 샀는데?", bScore: "T" },
+            { q: "과제를 시작할 때 나의 행동은?", a: "미리미리 계획을 짜서 여유롭게 끝낸다", aScore: "J", b: "미루고 미루다가 마감 직전에 집중력을 발휘한다", bScore: "P" },
+            { q: "영화나 드라마를 볼 때 나는?", a: "스토리와 캐릭터의 감정에 깊게 몰입해 눈물을 흘린다", aScore: "F", b: "스토리의 개연성을 분석하거나 연출을 평가한다", bScore: "T" },
+            { q: "주변 사람들이 나를 평가할 때 주로 하는 말은?", a: "조용하고 진중하며 생각이 깊어 보인다", aScore: "I", b: "활발하고 에너지가 넘치며 사교적이다", aScore: "E" },
+            { q: "현실적인 이야기와 상상 속 이야기 중 더 흥미로운 것은?", a: "실제로 일어날 법한 다큐멘터리나 뉴스", aScore: "S", b: "우주, 미래, 판타지 같은 영화나 소설", bScore: "N" },
+            { q: "방 정리를 할 때 나의 모습은?", a: "물건들의 제자리가 정해져 있어 항상 깔끔하다", aScore: "J", b: "치워야지 마음먹을 때 한 번에 몰아서 치운다", bScore: "P" },
+            { q: "어떤 문제를 해결해야 할 때 나는?", a: "기존에 해왔던 검증된 방식을 따른다", aScore: "S", b: "새롭고 독창적인 방법을 시도해 본다", bScore: "N" }
         ];
+
+        // 16가지 MBTI 상세 분석 데이터 베이스
+        const mbtiDetails = {
+            'ISTJ': {
+                title: '청렴결백한 논리주의자',
+                emoji: '📐',
+                desc: '사실에 근거하여 사고하며, 자신의 행동이나 결정에 일체의 흐트러짐이 없는 현실주의자입니다. 뛰어난 책임감을 가지고 정돈된 시스템 안에서 조용하고 철저하게 신뢰를 약속합니다.',
+                tags: ['#원칙주의', '#신뢰성', '#정직함', '#현실론'],
+                best: 'ESFP', worst: 'ENFP'
+            },
+            'ISFJ': {
+                title: '용감한 수호자',
+                emoji: '🛡️',
+                desc: '주변 사람들의 안전과 편안함을 가장 중요하게 생각하는 마음 따뜻한 보호자입니다. 내조나 지원에 매우 꼼꼼하며 타인의 감정에 헌신적이고 배려심이 가득합니다.',
+                tags: ['#다정다감', '#세심함', '#헌신적', '#평화주의'],
+                best: 'ESTP', worst: 'ENTP'
+            },
+            'INFJ': {
+                title: '선의의 옹호자',
+                emoji: '🔮',
+                desc: '세계에서 가장 흔치 않은 성격으로 높은 이상과 도덕성을 품고 살아가며 타인을 돕습니다. 뛰어난 통찰력으로 사람들과 소통하고 세상을 치유하는 소리 없는 영감을 퍼뜨립니다.',
+                tags: ['#통찰가', '#이상향', '#섬세함', '#신비주의'],
+                best: 'ENFP', worst: 'ESTP'
+            },
+            'INTJ': {
+                title: '용의주도한 전략가',
+                emoji: '♟️',
+                desc: '비전과 호기심이 가득 차 있으면서도 고도의 결단력을 지녔으며, 대외적인 주목보다는 자신의 야망과 철학에 집중합니다. 모든 것에 대해 분석적으로 깊게 탐색하는 사색가입니다.',
+                tags: ['#완벽주의', '#지적탐색', '#전략전술', '#독립적'],
+                best: 'ENFP', worst: 'ESFP'
+            },
+            'ISTP': {
+                title: '만능 재주꾼',
+                emoji: '🔧',
+                desc: '냉철한 이성과 넘치는 열정을 동시 소유한 실용주의자로, 도구를 만지고 원리를 실험하는 것을 즐깁니다. 적응 능력이 타의 추종을 불허하며 예측 불가한 순간에 최고의 능력을 보입니다.',
+                tags: ['#해결사', '#위기대처', '#마이웨이', '#개척자'],
+                best: 'ESFJ', worst: 'ENFJ'
+            },
+            'ISFP': {
+                title: '호기심 많은 예술가',
+                emoji: '🎨',
+                desc: '모든 종류의 아름다움을 추구하는 세련된 감성을 가졌습니다. 현재의 조용하고 자유로운 삶을 중시하며 겸손한 태도로 타인의 다름을 유연하게 수용하고 이해합니다.',
+                tags: ['#아티스트', '#자유주의', '#포용력', '#순수함'],
+                best: 'ESTJ', worst: 'ENTJ'
+            },
+            'INFP': {
+                title: '열정적인 중재자',
+                emoji: '🌱',
+                desc: '자신의 핵심 신념과 어긋나지 않는 한 항상 배려심 넘치고 부드러운 평화를 약속하는 이타주의자입니다. 아름다운 마음과 상상력으로 세상의 차가운 부분에 온기를 불어넣습니다.',
+                tags: ['#낭만주의', '#공감요정', '#이상주의', '#풍부한감성'],
+                best: 'ENFJ', worst: 'ESTJ'
+            },
+            'INTP': {
+                title: '논리적인 사색가',
+                emoji: '🧪',
+                desc: '전체 인구 중 소수로, 자신의 끊임없는 호기심과 뛰어난 논리 알고리즘을 개발하는 것을 가치 있게 여깁니다. 창의적으로 패턴을 읽어내고 세상의 가설을 해독하는 브레인입니다.',
+                tags: ['#천재성', '#아이디어', '#분석주의', '#정교함'],
+                best: 'ENTJ', worst: 'ESFJ'
+            },
+            'ESTP': {
+                title: '모험을 즐기는 사업가',
+                emoji: '🏎️',
+                desc: '활동적이고 직관적이며 매력적인 에너지가 가득합니다. 한시도 가만히 있는 것을 좋아하지 않으며, 백 마디 이론보다 직접 몸으로 실천하는 현실 타개 및 문제 해결력을 가집니다.',
+                tags: ['#실천주의', '#익스트림', '#인싸력', '#돌직구'],
+                best: 'ISFJ', worst: 'INFJ'
+            },
+            'ESFP': {
+                title: '자유로운 영혼의 연예인',
+                emoji: '✨',
+                desc: '즉흥적이며 매 순간 축제와 같은 에너지를 만들어내는 활기찬 유형입니다. 다른 사람들과 조화를 이루고 흥겨움을 나누며 풍부한 표현력으로 모든 곳을 화사한 무대로 바꿉니다.',
+                tags: ['#인싸킹', '#분위기메이커', '#초긍정', '#행복전도사'],
+                best: 'ISTJ', worst: 'INTJ'
+            },
+            'ENFP': {
+                title: '재기발랄한 활동가',
+                emoji: '🎈',
+                desc: '단순한 사회적 즐거움을 넘어 인류와 세상의 숨겨진 의미를 열정적으로 발견해 나가는 창조적 낙천가입니다. 다채로운 매력과 사람들을 휘어잡는 다정한 입담을 가졌습니다.',
+                tags: ['#낙천주의', '#친화력갑', '#독창성', '#스파크형'],
+                best: 'INFJ', worst: 'ISTJ'
+            },
+            'ENTP': {
+                title: '뜨거운 논쟁을 즐기는 변론가',
+                emoji: '📢',
+                desc: '어떠한 선입견이나 낡은 상투성에도 끊임없이 도전하며 토론을 이끄는 매력적인 지적 선구자입니다. 비판적이고 다각적인 시선으로 시스템을 부수고 새롭게 설계합니다.',
+                tags: ['#토론왕', '#도전정신', '#유머러스', '#트렌드세터'],
+                best: 'INFJ', worst: 'ISFJ'
+            },
+            'ESTJ': {
+                title: '엄격한 관리자',
+                emoji: '👔',
+                desc: '공동체와 비즈니스 사회를 견고하게 이끌어가는 책임감 있고 체계적인 리더입니다. 옳은 가치를 수호하고, 규칙과 전통을 공명정대하게 실현함으로써 높은 신뢰를 구축합니다.',
+                tags: ['#조직관리', '#실행력', '#리더십', '#원칙중시'],
+                best: 'ISFP', worst: 'INFP'
+            },
+            'ESFJ': {
+                title: '사교적인 외교관',
+                emoji: '🤝',
+                desc: '사랑이 가득하고 친절하며 모두와 연결되고 싶어 하는 인기 만점 조력가입니다. 공동체의 단합을 소중히 지키고 일상의 성실함과 지극한 다정함으로 타인의 마음을 안아줍니다.',
+                tags: ['#다정다감', '#사교력만렙', '#상냥함', '#기브앤테이크'],
+                best: 'ISTP', worst: 'INTP'
+            },
+            'ENFJ': {
+                title: '정의로운 사회운동가',
+                emoji: '☀️',
+                desc: '지적인 카리스마와 뜨거운 연민을 품고 있는 리더입니다. 사람들을 고무시키고 성장을 적극 지원하여, 세상에 실질적인 긍정적 개혁을 불러오려 헌신을 마다치 않는 영웅입니다.',
+                tags: ['#멘토십', '#선한영향력', '#설득력', '#열정맨'],
+                best: 'INFP', worst: 'ISTP'
+            },
+            'ENTJ': {
+                title: '대담한 통솔자',
+                emoji: '👑',
+                desc: '강력한 추진력과 강인한 결단력으로 장애물을 부수고 정상을 향해 진격하는 대장형 인물입니다. 장기적인 비전을 냉철한 전술로 완벽하게 조각해 완성해 나가는 야망가입니다.',
+                tags: ['#카리스마', '#비즈니스', '#추진력', '#승부사'],
+                best: 'INTP', worst: 'ISFP'
+            }
+        };
 
         let currentIdx = 0;
         let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+        let history = []; // 뒤로가기를 완벽 지원하기 위한 성향 저장 이력 배열
+        let soundEnabled = false; // 기본음소거 설정
 
+        // Web Audio API 소리 재생 시스템
+        let audioCtx = null;
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                // 브라우저 보증 처리 활성화
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                if (type === 'click') {
+                    // 미세하고 산뜻한 마이크로 플럭 사운드
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(520, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.12);
+                    gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.12);
+                } else if (type === 'success') {
+                    // 프리미엄 축하 메이저 7도 아르페지오 화음
+                    const now = audioCtx.currentTime;
+                    const chord = [261.63, 329.63, 392.00, 493.88, 523.25]; // C-E-G-B-C 화음
+                    chord.forEach((freq, index) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.type = 'triangle';
+                        o.frequency.setValueAtTime(freq, now + (index * 0.07));
+                        g.gain.setValueAtTime(0, now);
+                        g.gain.linearRampToValueAtTime(0.04, now + (index * 0.07) + 0.02);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + (index * 0.07) + 0.5);
+                        o.start(now + (index * 0.07));
+                        o.stop(now + (index * 0.07) + 0.5);
+                    });
+                } else if (type === 'reset') {
+                    // 가벼운 상향 슬라이딩 리셋음
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.15);
+                    gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                }
+            } catch (e) {
+                console.error("Audio Synthesis error: ", e);
+            }
+        }
+
+        // 테마 및 사운드 로딩 초기화
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+            updateThemeIcon();
+
+            // 사운드 상태 설정 복원
+            const savedSound = localStorage.getItem('sound_enabled');
+            if (savedSound === 'true') {
+                soundEnabled = true;
+                document.getElementById('sound-on-icon').style.display = 'block';
+                document.getElementById('sound-off-icon').style.display = 'none';
+            }
+        });
+
+        // 테마 전환 작동
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcon();
+            playSound('click');
+        }
+
+        function updateThemeIcon() {
+            const isDark = document.body.classList.contains('dark-theme');
+            const sunIcon = document.querySelector('.sun-icon');
+            const moonIcon = document.querySelector('.moon-icon');
+            if (isDark) {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            } else {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            }
+        }
+
+        // 사운드 시스템 온오프 제어
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            localStorage.setItem('sound_enabled', soundEnabled);
+            const soundOnIcon = document.getElementById('sound-on-icon');
+            const soundOffIcon = document.getElementById('sound-off-icon');
+
+            if (soundEnabled) {
+                soundOnIcon.style.display = 'block';
+                soundOffIcon.style.display = 'none';
+                // 소리 켰을 때 사운드 피드백 테스트 플레이
+                playSound('click');
+            } else {
+                soundOnIcon.style.display = 'none';
+                soundOffIcon.style.display = 'block';
+            }
+        }
+
+        // 진단 시작
         function startTest() {
+            playSound('click');
             document.getElementById('start-page').classList.remove('active');
             document.getElementById('question-page').classList.add('active');
-            document.getElementById('progress-area').style.display = 'block';
+            currentIdx = 0;
+            scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+            history = [];
             showQuestion();
         }
 
+        // 이전 단계 이동 (뒤로가기 핵심 메커니즘)
+        function goBack() {
+            if (history.length > 0) {
+                playSound('click');
+                const lastState = history.pop();
+                currentIdx = lastState.idx;
+                scores = JSON.parse(JSON.stringify(lastState.scores));
+                
+                // 질문 전환 시 고해상도 연산 트랜지션 적용
+                changeQuestionWithTransition(() => {
+                    showQuestion();
+                });
+            }
+        }
+
+        // 질문 렌더링 함수
         function showQuestion() {
-            if (currentIdx >= questions.length) {
-                showResult();
+            if(currentIdx >= questions.length) {
+                triggerAnalysisLoading();
                 return;
             }
 
-            // 프로그레스 바 상태 업데이트
+            // 뒤로가기 버튼 가시성 설정
+            const backBtn = document.getElementById('btn-back');
+            if (history.length > 0) {
+                backBtn.style.visibility = 'visible';
+            } else {
+                backBtn.style.visibility = 'hidden';
+            }
+
+            // 실시간 진행도 컴포넌트 업데이트
             document.getElementById('progress-percent').innerText = `${currentIdx + 1} / ${questions.length}`;
             document.getElementById('progress-fill-bar').style.width = `${((currentIdx + 1) / questions.length) * 100}%`;
 
             const currentQ = questions[currentIdx];
-            document.getElementById('question-text').innerText = currentQ.q;
+            document.getElementById('question-title-text').innerText = currentQ.q;
 
             const container = document.getElementById('options-container');
-            container.innerHTML = ''; // 이전 선택지 초기화
+            container.innerHTML = '';
 
-            // 첫 번째 선택지 버튼 생성
+            // 프리미엄 디자인 카드 옵션 A 생성
             const btnA = document.createElement('button');
             btnA.className = 'opt-btn';
-            btnA.innerText = currentQ.a;
-            btnA.onclick = () => selectOption(currentQ.type[0]);
+            btnA.innerHTML = `
+                <span class="opt-badge">A</span>
+                <span style="flex: 1;">${currentQ.a}</span>
+            `;
+            btnA.onclick = () => selectOption(currentQ.aScore);
 
-            // 두 번째 선택지 버튼 생성
+            // 프리미엄 디자인 카드 옵션 B 생성
             const btnB = document.createElement('button');
             btnB.className = 'opt-btn';
-            btnB.innerText = currentQ.b;
-            btnB.onclick = () => selectOption(currentQ.type[1]);
+            btnB.innerHTML = `
+                <span class="opt-badge">B</span>
+                <span style="flex: 1;">${currentQ.b}</span>
+            `;
+            btnB.onclick = () => selectOption(currentQ.bScore);
 
             container.appendChild(btnA);
             container.appendChild(btnB);
         }
 
-        function selectOption(key) {
-            scores[key]++;
-            currentIdx++;
-            showQuestion();
+        // 고수준 질문 트랜지션 모션 효과
+        function changeQuestionWithTransition(renderCallback) {
+            const target = document.getElementById('question-content');
+            target.classList.add('fade-out');
+            
+            setTimeout(() => {
+                renderCallback();
+                target.classList.remove('fade-out');
+                target.classList.add('fade-in');
+                setTimeout(() => {
+                    target.classList.remove('fade-in');
+                }, 200);
+            }, 200);
         }
 
-        function showResult() {
+        // 사용자가 한 성향의 선택을 하였을 때 점수 누적 처리
+        function selectOption(scoreKey) {
+            playSound('click');
+            // 뒤로가기용 히스토리에 현재 상태 깊은 복사 푸시
+            history.push({
+                idx: currentIdx,
+                scores: JSON.parse(JSON.stringify(scores))
+            });
+
+            scores[scoreKey]++;
+            currentIdx++;
+
+            changeQuestionWithTransition(() => {
+                showQuestion();
+            });
+        }
+
+        // 인텔리전스 가짜 분석 대기화면 구현 (Suspense UX 효과 부여)
+        function triggerAnalysisLoading() {
             document.getElementById('question-page').classList.remove('active');
-            document.getElementById('progress-area').style.display = 'none';
+            document.getElementById('loading-page').classList.add('active');
+
+            const phrases = [
+                "답변 데이터를 기반으로 성향 가중치를 추산 중입니다...",
+                "성격 4개 차원의 균형도를 연산하는 중입니다...",
+                "개인 맞춤형 성격 분석 보고서를 통합 구성 중입니다...",
+                "동일 성향 최고의 궁합 파트너를 탐색 중입니다..."
+            ];
+
+            let index = 0;
+            const phraseElement = document.getElementById('loading-phrase');
+            phraseElement.innerText = phrases[index];
+
+            // 500ms 단위로 심층 로딩 텍스트 전송
+            const phraseTimer = setInterval(() => {
+                index++;
+                if(index < phrases.length) {
+                    phraseElement.innerText = phrases[index];
+                }
+            }, 500);
+
+            // 약 2초간 정밀 계산 프로세스를 유지한 뒤 완벽히 시각 렌더링
+            setTimeout(() => {
+                clearInterval(phraseTimer);
+                showResult();
+            }, 2100);
+        }
+
+        // 성향의 대분류 기질 그룹 추정 (NT/NF/SJ/SP)
+        function getMBTIGroup(mbti) {
+            const second = mbti[1];
+            const third = mbti[2];
+            if (second === 'N' && third === 'T') return 'NT';
+            if (second === 'N' && third === 'F') return 'NF';
+            if (second === 'S' && third === 'J') return 'SJ';
+            if (second === 'S' && third === 'P') return 'SP';
+            return 'NT';
+        }
+
+        // 결과화면 출력 핵심 로직
+        function showResult() {
+            playSound('success');
+            document.getElementById('loading-page').classList.remove('active');
             document.getElementById('result-page').classList.add('active');
 
-            // 점수 판정 연산
+            // 최종 MBTI 연산 처리 (동적 동률 최적화 완벽 적용)
             let mbti = '';
             mbti += (scores.E >= scores.I) ? 'E' : 'I';
             mbti += (scores.S >= scores.N) ? 'S' : 'N';
             mbti += (scores.T >= scores.F) ? 'T' : 'F';
             mbti += (scores.J >= scores.P) ? 'J' : 'P';
 
-            // 결과 데이터 맵
-            const resultTemplates = {
-                'ISTJ': { title: '청렴결백한 논리주의자', emoji: '📐' },
-                'ISFJ': { title: '용감한 수호자', emoji: '🛡️' },
-                'INFJ': { title: '선의의 옹호자', emoji: '🔮' },
-                'INTJ': { title: '용의주도한 전략가', emoji: '♟️' },
-                'ISTP': { title: '만능 재주꾼', emoji: '🔧' },
-                'ISFP': { title: '호기심 많은 예술가', emoji: '🎨' },
-                'INFP': { title: '열정적인 중재자', emoji: '🌱' },
-                'INTP': { title: '논리적인 사색가', emoji: '🧪' },
-                'ESTP': { title: '모험을 즐기는 사업가', emoji: '🏎️' },
-                'ESFP': { title: '자유로운 영혼의 연예인', emoji: '✨' },
-                'ENFP': { title: '재기발랄한 활동가', emoji: '🎈' },
-                'ENTP': { title: '뜨거운 논쟁을 즐기는 변론가', emoji: '📢' },
-                'ESTJ': { title: '엄격한 관리자', emoji: '👔' },
-                'ESFJ': { title: '사교적인 외교관', emoji: '🤝' },
-                'ENFJ': { title: '정의로운 사회운동가', emoji: '☀️' },
-                'ENTJ': { title: '대담한 통솔자', emoji: '👑' }
-            };
+            const myResult = mbtiDetails[mbti] || { title: '매력적인 현대인', emoji: '😎', desc: '자유로운 사색가이자 세련된 도전자입니다.', tags: ['#유니크', '#지적', '#현대적'], best: 'ISTJ', worst: 'ENFP' };
 
-            const finalResult = resultTemplates[mbti] || { title: '알 수 없는 신비로운 존재', emoji: '👽' };
-
-            // 화면에 바인딩
+            // 상단 텍스트 요소 바인딩
             document.getElementById('result-mbti').innerText = mbti;
-            document.getElementById('result-title').innerText = finalResult.title;
-            document.getElementById('result-emoji').innerText = finalResult.emoji;
+            document.getElementById('result-title').innerText = myResult.title;
+            document.getElementById('result-emoji').innerText = myResult.emoji;
+            document.getElementById('result-desc').innerText = myResult.desc;
+
+            // 태그 렌더링
+            const tagContainer = document.getElementById('result-tags-container');
+            tagContainer.innerHTML = '';
+            myResult.tags.forEach(tag => {
+                const badge = document.createElement('span');
+                badge.className = 'trait-tag';
+                badge.innerText = tag;
+                tagContainer.appendChild(badge);
+            });
+
+            // 4대 성격 균형 차트 렌더링 최적화
+            renderDimensionChart('ei', scores.E, scores.I, 'E', 'I', '외향성', '내향성');
+            renderDimensionChart('sn', scores.S, scores.N, 'S', 'N', '감각성', '직관성');
+            renderDimensionChart('ft', scores.F, scores.T, 'F', 'T', '감정성', '사고성'); // FT 차트의 경우 text label mapping 완벽 가공
+            renderDimensionChart('jp', scores.J, scores.P, 'J', 'P', '판단성', '인식성');
+
+            // 동적 4대 기질 테마 변경 (앱 전체 Accent 일괄 수정하여 최고 수준 일체감 제공)
+            const mbtiGroup = getMBTIGroup(mbti);
+            const root = document.documentElement;
+            
+            // 기질그룹별 커스텀 테마 변수 매핑 테이블
+            if (mbtiGroup === 'NT') { // 분석가형 (Indigo / Purple)
+                root.style.setProperty('--primary', '#8b5cf6');
+                root.style.setProperty('--primary-dark', '#6d28d9');
+                root.style.setProperty('--primary-light', 'rgba(139, 92, 246, 0.15)');
+                root.style.setProperty('--accent-gradient', 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)');
+                root.style.setProperty('--glow-color', 'rgba(139, 92, 246, 0.25)');
+            } else if (mbtiGroup === 'NF') { // 외교관형 (Pink / Emerald-teal)
+                root.style.setProperty('--primary', '#ec4899');
+                root.style.setProperty('--primary-dark', '#be185d');
+                root.style.setProperty('--primary-light', 'rgba(236, 72, 153, 0.15)');
+                root.style.setProperty('--accent-gradient', 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)');
+                root.style.setProperty('--glow-color', 'rgba(236, 72, 153, 0.25)');
+            } else if (mbtiGroup === 'SJ') { // 관리자형 (Classic Royal Blue / Sky Blue)
+                root.style.setProperty('--primary', '#3b82f6');
+                root.style.setProperty('--primary-dark', '#1d4ed8');
+                root.style.setProperty('--primary-light', 'rgba(59, 130, 246, 0.15)');
+                root.style.setProperty('--accent-gradient', 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)');
+                root.style.setProperty('--glow-color', 'rgba(59, 130, 246, 0.25)');
+            } else if (mbtiGroup === 'SP') { // 탐험가형 (Golden Sunset / Orange)
+                root.style.setProperty('--primary', '#f97316');
+                root.style.setProperty('--primary-dark', '#c2410c');
+                root.style.setProperty('--primary-light', 'rgba(249, 115, 22, 0.15)');
+                root.style.setProperty('--accent-gradient', 'linear-gradient(135deg, #f97316 0%, #f43f5e 100%)');
+                root.style.setProperty('--glow-color', 'rgba(249, 115, 22, 0.25)');
+            }
+
+            // 최고의 궁합 / 최악의 궁합 매칭 데이터 연동
+            const bestMbti = myResult.best;
+            const worstMbti = myResult.worst;
+
+            const bestPartner = mbtiDetails[bestMbti] || { title: '조화로운 현대인', emoji: '💚' };
+            const worstPartner = mbtiDetails[worstMbti] || { title: '성향이 다른 개척자', emoji: '💔' };
+
+            // 매칭 정보 컴포넌트 데이터 바인딩
+            document.getElementById('comp-best-code').innerText = bestMbti;
+            document.getElementById('comp-best-emoji').innerText = bestPartner.emoji;
+            document.getElementById('comp-best-title').innerText = bestPartner.title;
+
+            document.getElementById('comp-worst-code').innerText = worstMbti;
+            document.getElementById('comp-worst-emoji').innerText = worstPartner.emoji;
+            document.getElementById('comp-worst-title').innerText = worstPartner.title;
+
+            // 다운로드 미리보기 영역 세부 정보 일체화 로딩
+            document.getElementById('preview-mbti').innerText = mbti;
+            document.getElementById('preview-emoji').innerText = myResult.emoji;
+            document.getElementById('preview-title').innerText = myResult.title;
+            
+            // 인증서 미리보기 디스크립션 깔끔히 가공
+            const maxDescLength = 55;
+            const cleanDesc = myResult.desc.length > maxDescLength ? myResult.desc.substring(0, maxDescLength) + "..." : myResult.desc;
+            document.getElementById('preview-desc').innerText = cleanDesc;
+        }
+
+        // 개별 차트 밸런스 렌더링 도구 (동적 수량 비율 그래프 빌더)
+        function renderDimensionChart(divId, leftScore, rightScore, leftKey, rightKey, leftLabel, rightLabel) {
+            const row = document.getElementById(`dim-row-${divId}`);
+            const total = leftScore + rightScore === 0 ? 3 : leftScore + rightScore; // 분모 안전망 설정
+            
+            const leftPct = Math.round((leftScore / total) * 100);
+            const rightPct = Math.round((rightScore / total) * 100);
+
+            // 좌측형 또는 우측형 활성화 클래스 분기 적용 및 글자색 갱신
+            const lblLeft = document.getElementById(`lbl-${leftKey}`);
+            const lblRight = document.getElementById(`lbl-${rightKey}`);
+            const barLeft = document.getElementById(`bar-${leftKey}`);
+            const barRight = document.getElementById(`bar-${rightKey}`);
+
+            lblLeft.innerText = `${leftLabel} (${leftKey}) ${leftPct}%`;
+            lblRight.innerText = `${rightPct}% (${rightKey}) ${rightLabel}`;
+
+            // 점수가 높은 방향을 주황/인디고 그라데이션으로 활성화
+            if (leftScore >= rightScore) {
+                row.classList.remove('dim-row-right');
+                lblLeft.classList.add('active');
+                lblRight.classList.remove('active');
+            } else {
+                row.classList.add('dim-row-right');
+                lblLeft.classList.remove('active');
+                lblRight.classList.add('active');
+            }
+
+            // 너비 비율 적용
+            barLeft.style.width = `${leftPct}%`;
+            barRight.style.width = `${rightPct}%`;
+        }
+
+        // 결과 모음 다시시작 리셋 함수
+        function resetTest() {
+            playSound('reset');
+            const root = document.documentElement;
+            // 기본 Indgo 테마 복원
+            root.style.setProperty('--primary', '#6366f1');
+            root.style.setProperty('--primary-dark', '#4f46e5');
+            root.style.setProperty('--primary-light', '#e0e7ff');
+            root.style.setProperty('--accent-gradient', 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)');
+            root.style.setProperty('--glow-color', 'rgba(99, 102, 241, 0.25)');
+
+            document.getElementById('result-page').classList.remove('active');
+            document.getElementById('start-page').classList.add('active');
+            currentIdx = 0;
+            scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+            history = [];
+        }
+
+        // 최고의/아쉬운 파트너 카드 클릭시 정교한 모달 상세창 렌더링
+        function viewCompDetails(type) {
+            playSound('click');
+            // 성격 유형 코드 조회
+            let targetMbti = '';
+            if (type === 'best') {
+                targetMbti = document.getElementById('comp-best-code').innerText;
+            } else {
+                targetMbti = document.getElementById('comp-worst-code').innerText;
+            }
+
+            const detail = mbtiDetails[targetMbti];
+            if (!detail) return;
+
+            // 모달 정보 기재
+            document.getElementById('modal-mbti').innerText = targetMbti;
+            document.getElementById('modal-emoji').innerText = detail.emoji;
+            document.getElementById('modal-title').innerText = detail.title;
+            document.getElementById('modal-desc').innerText = detail.desc;
+
+            // 기질 분석에 따른 뱃지 수정
+            const group = getMBTIGroup(targetMbti);
+            const badge = document.getElementById('modal-badge');
+            if(group === 'NT') { badge.innerText = 'ANALYST 🧬'; badge.style.background = '#e0e7ff'; badge.style.color = '#312e81'; }
+            else if(group === 'NF') { badge.innerText = 'DIPLOMAT 🔮'; badge.style.background = '#fdf2f8'; badge.style.color = '#9d174d'; }
+            else if(group === 'SJ') { badge.innerText = 'SENTINEL 🛡️'; badge.style.background = '#eff6ff'; badge.style.color = '#1e3a8a'; }
+            else if(group === 'SP') { badge.innerText = 'EXPLORER 🏎️'; badge.style.background = '#fff7ed'; badge.style.color = '#7c2d12'; }
+
+            // 태그 렌더링
+            const tagsBox = document.getElementById('modal-tags');
+            tagsBox.innerHTML = '';
+            detail.tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'trait-tag';
+                span.innerText = tag;
+                tagsBox.appendChild(span);
+            });
+
+            document.getElementById('mbti-details-modal').classList.add('active');
+        }
+
+        function closeMbtiDetailsModal() {
+            playSound('click');
+            document.getElementById('mbti-details-modal').classList.remove('active');
+        }
+
+        // 결과 URL 클립보드 복사 시스템
+        function copyLink() {
+            playSound('click');
+            // 사용자의 현 주소를 온전히 파싱하여 복사
+            const dummy = document.createElement('input');
+            const text = window.location.href;
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+
+            // 산뜻한 프리미엄 모던 토스트 호출
+            showToast('💡 진단 링크가 성공적으로 복사되었습니다!');
+        }
+
+        // 모던 토스트 팝업 제어기
+        function showToast(message) {
+            const existingToast = document.querySelector('.custom-toast');
+            if (existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'custom-toast';
+            toast.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                ${message}
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 2600);
+        }
+
+        // 모달 제어 영역
+        function openShareModal() {
+            playSound('click');
+            document.getElementById('share-modal').classList.add('active');
+        }
+
+        function closeShareModal() {
+            playSound('click');
+            document.getElementById('share-modal').classList.remove('active');
+        }
+
+        // 백드롭 마우스오버 클릭 시 안전 닫기
+        function closeModalOnBackdrop(event) {
+            if (event.target.classList.contains('modal')) {
+                playSound('click');
+                event.target.classList.remove('active');
+            }
+        }
+
+        // 정식 캔버스 생성 및 고해상도 PNG 빌드 기능
+        function downloadCardImage() {
+            playSound('click');
+            const mbti = document.getElementById('result-mbti').innerText;
+            const detail = mbtiDetails[mbti];
+            if (!detail) return;
+
+            // 고해상도 다운로드를 위한 600x800 규격 캔버스 초기 설정
+            const canvas = document.createElement('canvas');
+            canvas.width = 600;
+            canvas.height = 800;
+            const ctx = canvas.getContext('2d');
+
+            const group = getMBTIGroup(mbti);
+
+            // 기질 4가지 기준 고감도 그라디언트 맵핑 코드 정의
+            let gradStart = '#6366f1';
+            let gradEnd = '#4f46e5';
+            if (group === 'NT') { gradStart = '#8b5cf6'; gradEnd = '#4c1d95'; }
+            else if (group === 'NF') { gradStart = '#ec4899'; gradEnd = '#6d1b46'; }
+            else if (group === 'SJ') { gradStart = '#3b82f6'; gradEnd = '#1d3557'; }
+            else if (group === 'SP') { gradStart = '#f97316'; gradEnd = '#7c2d12'; }
+
+            // 1. 그라디언트 배경 드로잉
+            const gradient = ctx.createLinearGradient(0, 0, 0, 800);
+            gradient.addColorStop(0, gradStart);
+            gradient.addColorStop(1, gradEnd);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 600, 800);
+
+            // 2. 백그라운드 디자인 서클 드로잉 (정교한 투명도 제어)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+            ctx.lineWidth = 1.5;
+            for (let i = 1; i <= 6; i++) {
+                ctx.beginPath();
+                ctx.arc(300, 400, i * 85, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // 3. 네 코너 메탈릭 느낌 데코레이션 프레임 추가
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+            ctx.lineWidth = 2;
+            const pad = 24;
+            const lineLen = 35;
+            
+            // 상좌
+            ctx.beginPath(); ctx.moveTo(pad, pad + lineLen); ctx.lineTo(pad, pad); ctx.lineTo(pad + lineLen, pad); ctx.stroke();
+            // 상우
+            ctx.beginPath(); ctx.moveTo(600 - pad, pad + lineLen); ctx.lineTo(600 - pad, pad); ctx.lineTo(600 - pad - lineLen, pad); ctx.stroke();
+            // 하좌
+            ctx.beginPath(); ctx.moveTo(pad, 800 - pad - lineLen); ctx.lineTo(pad, 800 - pad); ctx.lineTo(pad + lineLen, 800 - pad); ctx.stroke();
+            // 하우
+            ctx.beginPath(); ctx.moveTo(600 - pad, 800 - pad - lineLen); ctx.lineTo(600 - pad, 800 - pad); ctx.lineTo(600 - pad - lineLen, 800 - pad); ctx.stroke();
+
+            // 4. 중앙 원형 이모지 거치 뱃지 서클 설계
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.beginPath();
+            ctx.arc(300, 210, 75, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // 5. 이모지 드로잉
+            ctx.font = '76px Apple Color Emoji, Segoe UI Emoji, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(detail.emoji, 300, 210);
+
+            // 6. 텍스트 라벨 시스템 기재
+            // 헤더 카테고리 기재
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.font = 'bold 15px Pretendard, sans-serif';
+            ctx.textBaseline = 'alphabetic';
+            ctx.fillText('PREMIUM PERSONALITY PASSPORT', 300, 75);
+
+            // MBTI 코드 대형 드로잉
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '900 85px Pretendard, sans-serif';
+            ctx.fillText(mbti, 300, 345);
+
+            // 성격 유형 한글명 드로잉
+            ctx.font = 'bold 28px Pretendard, sans-serif';
+            ctx.fillText(detail.title, 300, 410);
+
+            // 절취 실선 데코레이션
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+            ctx.setLineDash([5, 6]);
+            ctx.beginPath();
+            ctx.moveTo(80, 460);
+            ctx.lineTo(520, 460);
+            ctx.stroke();
+            ctx.setLineDash([]); // 대시 상태 복구
+
+            // 7. 한글 디스크립션 텍스트 줄바꿈 기능 탑재 드로잉
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.font = '500 18px Pretendard, sans-serif';
+            canvasTextWrap(ctx, detail.desc, 300, 505, 420, 28);
+
+            // 8. 하단 프리미엄 오피셜 태그 정보 기재
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+            ctx.font = 'bold 16px Pretendard, sans-serif';
+            const tagString = detail.tags.join('   ');
+            ctx.fillText(tagString, 300, 675);
+
+            // 브랜드 카피라이터 기재
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.font = '500 13px Pretendard, sans-serif';
+            ctx.fillText('OFFICIAL PERSONALITY CERTIFICATE • PREMIUM MBTI', 300, 745);
+
+            // 9. 로컬 이미지 즉각 추출 및 크롬 가상 앵커를 통한 완전 비동기 다운로드 구현
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.download = `MBTI_Passport_${mbti}.png`;
+            downloadAnchor.href = canvas.toDataURL('image/png');
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            document.body.removeChild(downloadAnchor);
+
+            showToast('💾 MBTI 인증서 다운로드가 완료되었습니다!');
+        }
+
+        // 한글 글자별 캔버스 안전 자동 랩핑 분석 함수
+        function canvasTextWrap(context, text, x, y, maxWidth, lineHeight) {
+            let lines = [];
+            let currentLine = '';
+
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                let testLine = currentLine + char;
+                let metrics = context.measureText(testLine);
+                let testWidth = metrics.width;
+
+                if (testWidth > maxWidth && i > 0) {
+                    lines.push(currentLine);
+                    currentLine = char;
+                } else {
+                    currentLine = testLine;
+                }
+            }
+            lines.push(currentLine);
+
+            // 연산된 각 줄 텍스트를 드로잉
+            for (let i = 0; i < lines.length; i++) {
+                context.fillText(lines[i], x, y + (i * lineHeight));
+            }
         }
     </script>
 </body>
