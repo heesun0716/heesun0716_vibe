@@ -1,83 +1,46 @@
-# 🌸 Premium MBTI Diagnosis Test 🌸
+# 🌸 Premium MBTI Diagnosis Test (프리미엄 MBTI 성격 유형 진단 테스트)
 
-<div align="center">
-  <img src="https://img.shields.io/badge/Language-HTML5%20%2F%20CSS3-FFB6C1?style=flat-square&logo=html5&logoColor=white"/>
-  <img src="https://img.shields.io/badge/JavaScript-Vanilla%20JS-FFC0CB?style=flat-square&logo=javascript&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Design-Glassmorphism-FF69B4?style=flat-square"/>
-  <img src="https://img.shields.io/badge/Build-Success-pink?style=flat-square&logo=github"/>
-</div>
-
-<br/>
-
-> 💡 **"단 3분 만에 마주하는 진짜 나의 모습"**
-> 본 프로젝트는 사용자의 일상적인 행동 패턴을 기반으로 성격 유형(MBTI)과 심리적 마인드셋을 다각도로 분석하여 프리미엄 대시보드 리포트를 제공하는 **고급형 성격유형 진단 웹 애플리케이션**입니다.
+사용자의 일상적인 행동 패턴을 기반으로 성격 유형(MBTI)과 심리적 마인드셋을 다각도로 분석하여 대시보드 리포트를 제공하는 웹 애플리케이션입니다.
 
 ---
 
-## 💕 주요 UI/UX 기능 (Premium Features)
-
-감각적인 핑크빛 그라데이션 오라와 모던한 컴포넌트로 사용자 경험(UX)을 극대화했습니다.
-
-* ✨ **글래스모피즘 메인 카드**: 반투명 레이어와 블러 효과를 극대화한 미려한 UI 카드 디자인
-* 🎨 **다이내믹 백그라운드**: 백그라운드에서 부드럽게 움직이며 펄싱(Pulse)하는 프리미엄 그라데이션 오브(Orb) 이펙트
-* 🌓 **테마 스위처 (다크 모드)**: 눈이 편안한 다크 테마와 세련된 라이트 테마 간 실시간 CSS 토글 전환 기능
-* 🎵 **사운드 및 인터랙션**: 정밀한 웹 오디오 컨트롤 사운드 활성화/비활성화 스위치 내장
-* 📊 **실시간 애니메이션**: 다이내믹 진행도 바(Progress Bar), 페이드 트랜지션, 로딩 페이지 엔진 구동
+## 🛠️ 개발 목적 및 배경
+- **개발 배경**: 사용자의 성향을 4가지 지표(E/I, S/N, T/F, J/P)에 따라 체계적으로 분류하는 알고리즘을 학습하고, 이를 웹 기술로 구현하기 위해 시작되었습니다.
+- **주요 목표**: 사용자가 문항에 답변함에 따라 점수를 누적하고, 최종 점수를 계산하여 정확한 16가지 성격 유형 결과를 도출하는 핵심 진단 로직을 안정적으로 구현하는 데 중점을 두었습니다.
 
 ---
 
-## 🔮 시스템 아키텍처 및 로직 설명 (Technical Logic)
-
-웹 프론트엔드의 최신 기술 트렌드를 반영하여 외부 무거운 라이브러리 없이 순수 Vanilla 기술로만 가볍고 빠르게 빌드되었습니다.
-
-### 1️⃣ 컴포넌트 기반 데이터 핸들링
-* **12문항 정밀 프로파일링 시스템**: 사용자의 성향을 완벽하게 필터링할 수 있는 엄선된 12가지 커스텀 핵심 문항 기반 설계
-* **동적 돔(DOM) 조작**: 질문 및 답변 선택지 선택 시 데이터 흐름에 맞춰 실시간으로 구조가 변경 및 생성되는 Dynamic UI 렌더링 시스템
-
-### 2️⃣ 4차원 성향 밸런싱 연산 알고리즘
-사용자의 응답 스코어에 따라 MBTI의 4대 핵심 축을 실시간 수치화하여 계산합니다.
-$$\text{Extraversion (E)} \iff \text{Introversion (I)}$$
-$$\text{Sensing (S)} \iff \text{Intuition (N)}$$
-$$\text{Thinking (T)} \iff \text{Feeling (F)}$$
-$$\text{Judging (J)} \iff \text{Perception (P)}$$
-* 연산 완료 후 **좌/우 우세 성향**에 따라 게이지 바의 색상과 방향이 CSS 변수(`--accent-gradient`)를 통해 실시간 반전 처리됩니다.
-
-### 3️⃣ 연산 지연 가상화 (Loading Page Layer)
-* 유저가 모든 응답을 마치면 즉시 결과로 넘어가지 않고, 가상 데이터 연산 레이어가 작동하여 프리미엄 리포트를 정밀 생성하는 듯한 몰입도 높은 UX 흐름을 구현했습니다.
+## ⚙️ 기술 스택 (Tech Stack)
+- **Language**: HTML5 / CSS3 / JavaScript (Vanilla JS)
+- **배포 환경**: GitHub Pages
 
 ---
 
-## 🛠️ 개발 기술 스택 (Tech Stack)
+## 💻 핵심 구현 기능 및 알고리즘 특징 (Core Logic)
 
-<table align="center">
-  <tr>
-    <td align="center" width="160px">
-      <img src="https://img.shields.io/badge/HTML5-FFB6C1?style=for-the-badge&logo=html5&logoColor=white"/>
-    </td>
-    <td align="center" width="160px">
-      <img src="https://img.shields.io/badge/CSS3-FFC0CB?style=for-the-badge&logo=css3&logoColor=white"/>
-    </td>
-    <td align="center" width="160px">
-      <img src="https://img.shields.io/badge/JavaScript-FF69B4?style=for-the-badge&logo=javascript&logoColor=white"/>
-    </td>
-  </tr>
-</table>
+### 1. MBTI 점수 계산 및 판별 알고리즘
+- 사용자가 선택한 문항의 데이터 값을 기반으로 각 성향 지표(E vs I, S vs N, T vs F, J vs P)의 점수를 실시간으로 누적합니다.
+- 모든 문항이 끝난 후, 계산된 최종 점수의 대소 관계에 따라 `E` 또는 `I`, `S` 또는 `N` 등의 알파벳을 조합하여 최종 16가지 성향 문자열(예: `INFJ`, `ESTP`)을 동적으로 생성하는 조건문 로직을 구현했습니다.
 
-* **Font**: 리드미컬하고 높은 가독성을 확보하기 위해 프리미엄 웹 폰트인 `Pretendard (v1.3.9)` 환경 적용
-* **Responsive**: 모바일 환경 최적화를 위한 미디어 쿼리(`@media`) 세부 브레이크 포인트 디바이스 맞춤 설계
+### 2. 동적 페이지 및 문항 전환 (State Management)
+- 여러 개의 질문을 별도의 HTML 페이지 이동 없이, JavaScript 배열 데이터(`questions`)와 인덱스 제어를 통해 한 화면에서 부드럽게 넘어가도록 설계했습니다.
+- [여기에 추가적인 특징 적기: 예 - 데이터 구조로 객체 배열(Object Array)을 사용함]
+
+### 3. 결과 대시보드 데이터 바인딩
+- 계산된 MBTI 결과 문자열에 매칭되는 유형별 상세 설명, 성격적 특징 데이터를 화면의 DOM 요소에 동적으로 주입(Data Binding)하여 사용자 맞춤형 결과 화면을 보여줍니다.
 
 ---
 
-## 🚀 실행 및 테스트 방법 (How to Run)
+## 📈 코드 구현 과정 (Development Process)
 
-본 프로젝트는 순수 웹 표준 기술로 작성되어 별도의 빌드 과정이나 서버 오픈 없이 즉시 테스트가 가능합니다.
+1. **질문 및 결과 데이터셋(Dataset) 구축**: 각 문항이 어떤 MBTI 지표에 가중치를 주는지 JSON 구조의 객체 상수로 정의했습니다.
+2. **진단 로직 설계 및 테스트**: 사용자의 선택 결과가 배열이나 객체에 올바르게 누적되는지 개발자 도구(Console)를 활용하여 반복 검증했습니다.
+3. **UI 연동 및 기능 고도화**: 점수 계산 로직과 진행 바(Progress Bar), 애니메이션 효과가 싱크에 맞게 동작하도록 이벤트를 제어했습니다.
 
-```bash
-# 1. 원격 저장소의 코드 클론 받기
-git clone [https://github.com/your-username/premium-mbti-test.git](https://github.com/your-username/premium-mbti-test.git)
+---
 
-# 2. 프로젝트 디렉터리로 이동
-cd premium-mbti-test
-
-# 3. index.html 파일을 브라우저로 더블 클릭하거나 로컬 서버로 실행
-# (VS Code 사용자라면 Live Server 익스텐션 실행을 추천합니다! 🌸)
+## 📂 파일 구조 (File Structure)
+```text
+├── index.html        # 메인 구조 및 진단/결과 마크업 구성
+├── README.md         # 프로젝트 안내 문서
+└── [만약 스크립트나 스타일 파일이 따로 있다면 여기에 작성해주세요. 예: script.js]
